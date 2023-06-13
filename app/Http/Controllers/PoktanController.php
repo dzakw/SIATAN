@@ -8,21 +8,31 @@ use Illuminate\Http\Request;
 
 class PoktanController extends Controller
 {
-    public function index($id)
+    public function index($gapoktan_id)
     {
-        $gapoktan = Gapoktan::findOrFail($id);
+        $gapoktan = Gapoktan::findOrFail($gapoktan_id);
         $poktan = $gapoktan->poktan;
 
         return view('ketua.poktan.index', compact('poktan', 'gapoktan'));
     }
 
-
-    public function create($id)
+    public function create($gapoktan_id)
     {
-        $gapoktan = Gapoktan::findOrFail($id);
+        $gapoktan = Gapoktan::findOrFail($gapoktan_id);
 
         return view('ketua.poktan.create', compact('gapoktan'));
     }
+
+
+    public function show($gapoktan_id, $poktan_id)
+    {
+        $poktan = Poktan::findOrFail($poktan_id);
+        $gapoktan = $poktan->gapoktan;
+
+        return view('ketua.poktan.show', compact('poktan', 'gapoktan', 'gapoktan_id', 'poktan_id'));
+    }
+
+
 
 
     public function store(Request $request)

@@ -32,27 +32,39 @@ Route::prefix('ketua')
         Route::resource('pinjaman-ketua', 'Ketua\PinjamanController')->except(['create', 'store', 'edit']);
     });
 
-    Route::prefix('admin/ketua/poktan')
-    ->group(function () {
-        Route::get('index', 'PoktanController@index')->name('ketua.poktan.index');
-        Route::get('show/{poktan}', 'PoktanController@show')->name('ketua.poktan.show');
-        Route::get('create', 'App\Http\Controllers\PoktanController@create')->name('ketua.poktan.create');
-        Route::get('edit/{poktan}', 'PoktanController@edit')->name('ketua.poktan.edit');
-        Route::get('anggota/{poktan}', 'PoktanController@anggota')->name('ketua.poktan.anggota');
-        Route::get('create', 'PoktanController@create')->name('ketua.poktan.create');
-        Route::post('store', 'PoktanController@store')->name('ketua.poktan.store');
-
-    });
-
     Route::prefix('admin/ketua/gapoktan')
     ->group(function () {
-        Route::get('show/{id}/create', 'PoktanController@create')->name('ketua.gapoktan.show.create');
+        Route::get('show/{gapoktan_id}/create', 'PoktanController@create')->name('ketua.gapoktan.show.create');
         Route::get('index', 'GapoktanController@index')->name('ketua.gapoktan.index');
         Route::get('create', 'GapoktanController@create')->name('ketua.gapoktan.create');
         Route::get('show/{gapoktan}', 'GapoktanController@show')->name('ketua.gapoktan.show');
+        Route::get('show/{gapoktan_id}', 'GapoktanController@show')->name('ketua.gapoktan.show');
         Route::put('update/{gapoktan}', 'GapoktanController@update')->name('ketua.gapoktan.update');
         Route::post('store', 'GapoktanController@store')->name('ketua.gapoktan.store');
         Route::get('edit/{gapoktan}', 'GapoktanController@edit')->name('ketua.gapoktan.edit');
         Route::delete('delete/{gapoktan}', 'GapoktanController@destroy')->name('ketua.gapoktan.destroy');
-        Route::get('show/{id}/create', 'PoktanController@create')->name('admin.ketua.gapoktan.show.create');
+        Route::get('show/{gapoktan_id}/create', 'PoktanController@create')->name('admin.ketua.gapoktan.show.create');
     });
+
+    Route::prefix('admin/ketua/gapoktan/show/{gapoktan_id}/poktan')
+    ->group(function(){
+        Route::get('index', 'PoktanController@index')->name('ketua.poktan.index');
+        Route::get('show/{poktan}', 'PoktanController@show')->name('ketua.poktan.show');
+        Route::get('create', 'PoktanController@create')->name('ketua.poktan.create');
+        Route::get('show/{poktan}', 'PoktanController@show')->name('ketua.poktan.show');
+        Route::get('edit/{poktan}', 'PoktanController@edit')->name('ketua.poktan.edit');
+        Route::get('anggota/{poktan}', 'PoktanController@anggota')->name('ketua.poktan.anggota');
+        Route::post('store', 'PoktanController@store')->name('ketua.poktan.store');
+    });
+
+    Route::prefix('admin/ketua/gapoktan/show/{gapoktan_id}/poktan/show/{poktan_id}/anggota')
+    ->group(function(){
+        Route::get('index', 'AnggotaPoktanController@index')->name('ketua.anggota.index');
+        Route::get('show/{anggota}', 'AnggotaPoktanController@show')->name('ketua.anggota.show');
+        Route::get('create', 'AnggotaPoktanController@create')->name('ketua.anggota.create');
+        Route::get('show/{anggota}', 'AnggotaPoktanController@show')->name('ketua.anggota.show');
+        Route::get('edit/{anggota}', 'AnggotaPoktanController@edit')->name('ketua.anggota.edit');
+        Route::post('store', 'AnggotaPoktanController@store')->name('ketua.anggota.store');
+    });
+
+

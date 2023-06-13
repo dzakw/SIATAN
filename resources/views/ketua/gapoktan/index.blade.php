@@ -35,7 +35,6 @@
                                     <th>Nama Gapoktan</th>
                                     <th>Alamat</th>
                                     <th>Kontak</th>
-                                    <th>Poktan</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -47,13 +46,6 @@
                                         <td>{{ $g->nama }}</td>
                                         <td>{{ $g->alamat }}</td>
                                         <td>{{ $g->kontak }}</td>
-                                        <td>
-                                            <ul>
-                                                @foreach ($g->poktan as $p)
-                                                    <li>{{ $p->nama }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </td>
                                         <td>
                                             <a href="{{ route('ketua.gapoktan.show', $g->id) }}"
                                                 class="btn btn-info btn-sm">Detail</a>

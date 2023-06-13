@@ -37,12 +37,13 @@ class GapoktanController extends Controller
         return redirect()->route('ketua.gapoktan.index')->with(['success' => 'Data berhasil diperbarui.']);
     }
 
-    public function show(Gapoktan $gapoktan)
-{
-    $gapoktan = Gapoktan::with('poktan')->findOrFail($gapoktan->id);
+    public function show($gapoktan_id)
+    {
+    $gapoktan = Gapoktan::with('poktan')->findOrFail($gapoktan_id);
 
     return view('ketua.gapoktan.show', compact('gapoktan'));
-}
+    }
+
 
     public function storePoktan(Request $request, Gapoktan $gapoktan)
 {

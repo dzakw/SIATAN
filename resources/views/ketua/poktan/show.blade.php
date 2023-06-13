@@ -9,8 +9,8 @@
             <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
                 <li class="breadcrumb-item"><a href="#"><span class="fas fa-home"></span></a></li>
                 <li class="breadcrumb-item"><a href="#">Gapoktan</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('gapoktan.show', $poktan->gapoktan->id) }}">{{ $poktan->gapoktan->nama }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('ketua.poktan.show', $poktan->id) }}">{{ $poktan->nama }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('ketua.gapoktan.show', $poktan->gapoktan->id) }}">{{ $poktan->gapoktan->nama }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('ketua.poktan.show', [$poktan->gapoktan->id, $poktan->id]) }}">{{ $poktan->nama }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Detail Poktan</li>
             </ol>
         </nav>
@@ -35,18 +35,16 @@
                         <thead>
                             <tr>
                                 <th>Nama Anggota</th>
-                                <th>Pertanian</th>
-                                <th>Perkebunan</th>
-                                <th>Kehutanan</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Kontak</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($poktan->anggota as $anggota)
+                            @foreach ($poktan->anggota_poktan as $anggota)
                                 <tr>
                                     <td>{{ $anggota->nama_lengkap }}</td>
-                                    <td>{{ $anggota->pertanian }}</td>
-                                    <td>{{ $anggota->perkebunan }}</td>
-                                    <td>{{ $anggota->kehutanan }}</td>
+                                    <td>{{ $anggota->jenis_kelamin }}</td>
+                                    <td>{{ $anggota->kontak }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -55,8 +53,8 @@
                     <hr>
 
                     <div class="text-right">
-                        <a href="{{ route('ketua.anggota.create', $poktan->id) }}" class="btn btn-primary">Tambah Anggota</a>
-                        <a href="{{ route('ketua.poktan.index') }}" class="btn btn-primary">Kembali</a>
+                        <a href="{{ route('ketua.anggota.create', [$poktan->gapoktan->id, $poktan->id]) }}" class="btn btn-primary">Tambah Anggota</a>
+                        <a href="{{ route('ketua.poktan.index', ['gapoktan_id' => $gapoktan_id, 'poktan_id' => $poktan_id]) }}" class="btn btn-primary">Kembali</a>
                     </div>
 
                 </div>

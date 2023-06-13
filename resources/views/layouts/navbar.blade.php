@@ -55,54 +55,6 @@
                     </ul>
                 </div>
             </li>
-
-            <li class="nav-item">
-                <span class="nav-link  collapsed  d-flex justify-content-between align-items-center"
-                    data-toggle="collapse" data-target="#poktan">
-                    <span>
-                        <span class="sidebar-icon"><span class="fas fa-object-group"></span></span>
-                        Poktan
-                    </span>
-                    <span class="link-arrow"><span class="fas fa-chevron-right"></span></span>
-                </span>
-                <div class="multi-level collapse {{ (Request::route()->getName() == 'ketua.poktan.index') ||
-                                                      (Request::route()->getName() == 'ketua.poktan.create') ||
-                                                      (Request::route()->getName() == 'ketua.poktan.show') ? 'show' : '' }}"
-                    role="list" id="poktan" aria-expanded="false">
-                    <ul class="flex-column nav">
-                        <li class="nav-item {{ (Request::route()->getName() == 'ketua.poktan.index') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('ketua.poktan.index') }}"><span>Data Poktan</span></a>
-                        </li>
-                        <li class="nav-item {{ (Request::route()->getName() == 'poktan.create') ? 'active' : '' }}">
-                            <a class="nav-link" href="/admin/ketua/poktan/create"><span>Tambah Poktan</span></a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <span class="nav-link  collapsed  d-flex justify-content-between align-items-center"
-                    data-toggle="collapse" data-target="#submenu-app">
-                    <span>
-                        <span class="sidebar-icon"><span class="fas fa-users"></span></span>
-                        Anggota Poktan
-                    </span>
-                    <span class="link-arrow"><span class="fas fa-chevron-right"></span></span>
-                </span>
-                <div class="multi-level collapse {{ (Request::route()->getName() == 'anggota_poktan.index') ||
-                                                    (Request::route()->getName() == 'anggota_poktan.create') ||
-                                                    (Request::route()->getName() == 'anggota_poktan.show') ? 'show' : '' }}" role="list"
-                    id="submenu-app" aria-expanded="false">
-                    <ul class="flex-column nav">
-                        <li class="nav-item {{ (Request::route()->getName() == 'anggota_poktan.index') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('anggota_poktan.index') }}"><span>Data Anggota</span></a>
-                        </li>
-                        <li class="nav-item {{ (Request::route()->getName() == 'anggota_poktan.create') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('anggota_poktan.create') }}"><span>Tambah Anggota</span></a>
-            </li>
-        </ul>
-    </div>
-</li>
-
             <li class="nav-item">
                 <span class="nav-link  collapsed  d-flex justify-content-between align-items-center"
                     data-toggle="collapse" data-target="#pinjaman-app">
@@ -127,6 +79,11 @@
                     </ul>
                 </div>
             </li>
+        </ul>
+    </div>
+</li>
+
+
 
             {{-- Sidebar Ketua --}}
             @elsecan('isKetua')

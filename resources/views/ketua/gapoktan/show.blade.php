@@ -51,7 +51,7 @@
                                 <tr>
                                     <td>{{ $poktan->nama }}</td>
                                     <td>
-                                        <a href="{{ route('ketua.poktan.show', $poktan->id) }}" class="btn btn-primary">Detail</a>
+                                        <a href="{{ route('ketua.poktan.show', ['gapoktan_id' => $gapoktan->id, 'poktan' => $poktan->id])                                        }}" class="btn btn-primary">Detail</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -61,7 +61,7 @@
                     <hr>
 
                     <div class="text-right">
-                        <a href="{{ route('admin.ketua.gapoktan.show.create', ['id' => $gapoktan->id]) }}" class="btn btn-primary">Tambah Poktan</a>
+                        <a href="{{ route('admin.ketua.gapoktan.show.create', ['gapoktan_id' => $gapoktan->id]) }}" class="btn btn-primary">Tambah Poktan</a>
                     </div>
 
 
