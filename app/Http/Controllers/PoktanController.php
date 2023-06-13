@@ -3,22 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Poktan;
+use App\Gapoktan;
 use Illuminate\Http\Request;
 
 class PoktanController extends Controller
 {
-    public function index()
+    public function index($id)
     {
-        $poktan = Poktan::with('anggota_poktan')->get();
+        $gapoktan = Gapoktan::findOrFail($id);
+        $poktan = $gapoktan->poktan;
 
-        return view('ketua.poktan.index', compact('poktan'));
+        return view('ketua.poktan.index', compact('poktan', 'gapoktan'));
     }
 
-    public function create($gapoktan_id)
+
+    public function create($id)
     {
-        $gapoktan = Gapoktan::findOrFail($gapoktan_id);
+        $gapoktan = Gapoktan::findOrFail($id);
+
         return view('ketua.poktan.create', compact('gapoktan'));
     }
+
 
     public function store(Request $request)
     {

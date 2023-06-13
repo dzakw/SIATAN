@@ -61,8 +61,9 @@
                     <hr>
 
                     <div class="text-right">
-                        <a href="{{ route('ketua.poktan.create') }}" class="btn btn-primary">Tambah Poktan</a>
+                        <a href="{{ route('admin.ketua.gapoktan.show.create', ['id' => $gapoktan->id]) }}" class="btn btn-primary">Tambah Poktan</a>
                     </div>
+
 
                 </div>
             </div>
