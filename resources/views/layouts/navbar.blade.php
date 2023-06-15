@@ -23,9 +23,6 @@
             </div>
         </div>
         <ul class="nav flex-column">
-
-            {{-- Sidebar Admin --}}
-            @can('isAdmin')
             <li class="nav-item ">
                 <a href="{{ route('dashboard.admin') }}" class="nav-link">
                     <span class="sidebar-icon"><span class="fas fa-chart-pie"></span></span>
@@ -82,61 +79,4 @@
         </ul>
     </div>
 </li>
-
-
-
-            {{-- Sidebar Ketua --}}
-            @elsecan('isKetua')
-            <li class="nav-item {{ (request()->is('ketua') ? 'active' : '') }}">
-                <a href="{{ route('dashboard.ketua') }}" class="nav-link">
-                    <span class="sidebar-icon"><span class="fas fa-chart-pie"></span></span>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-
-            <li class="nav-item {{ (request()->is('ketua/user*') ? 'active' : '') }}">
-                <span class="nav-link  collapsed  d-flex justify-content-between align-items-center"
-                    data-toggle="collapse" data-target="#submenu-app">
-                    <span>
-                        <span class="sidebar-icon"><span class="fas fa-users"></span></span>
-                        User
-                    </span>
-                    <span class="link-arrow"><span class="fas fa-chevron-right"></span></span>
-                </span>
-                <div class="multi-level collapse {{ (Request::route()->getName() == 'user.index') ||
-                                        (Request::route()->getName() == 'user.create') ||
-                                        (Request::route()->getName() == 'user.show')  ? 'show' : '' }}" role="list"
-                    id="submenu-app" aria-expanded="false">
-                    <ul class="flex-column nav">
-                        <li class="nav-item {{ (Request::route()->getName() == 'user.index') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('user.index') }}"><span>Data User</span></a>
-                        </li>
-                        <li class="nav-item {{ (Request::route()->getName() == 'user.create') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('user.create') }}"><span>Tambah User</span></a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-
-
-            <li class="nav-item {{ request()->is('ketua/pinjaman-ketua*') ? 'active' : '' }}">
-                <a href="{{ route('pinjaman-ketua.index') }}" class="nav-link">
-                    <span class="sidebar-icon"><span class="fas fa-database"></span></span>
-                    <span>Data Pinjaman</span>
-                </a>
-            </li>
-
-            <li class="nav-item {{ request()->is('ketua/pengaturan*') ? 'active' : '' }}">
-                <a href="{{ route('pengaturan.index') }}" class="nav-link">
-                    <span class="sidebar-icon"><span class="fas fa-anchor"></span></span>
-                    <span>Pengaturan</span>
-                </a>
-            </li>
-            @endcan
-
-
-
-
-        </ul>
-    </div>
 </nav>

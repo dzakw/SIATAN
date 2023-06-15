@@ -13,14 +13,13 @@
                 <li class="breadcrumb-item active" aria-current="page">Tambah Poktan</li>
             </ol>
         </nav>
-
     </div>
 
     <div class="row">
         <div class="col-12 mb-4">
             <div class="card border-light shadow-sm components-section">
                 <div class="card-body">
-                    <form action="{{ route('ketua.poktan.store') }}" method="post">
+                    <form action="{{ route('ketua.poktan.store', $gapoktan->id) }}" method="post">
                         @csrf
                         <div class="row mb-4">
                             <div class="col-lg-5 col-sm-6">
@@ -37,11 +36,9 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </form>
-
                 </div>
             </div>
         </div>
     </div>
 
 @endsection
-

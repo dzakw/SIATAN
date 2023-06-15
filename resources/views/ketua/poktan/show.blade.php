@@ -54,7 +54,7 @@
 
                     <div class="text-right">
                         <a href="{{ route('ketua.anggota.create', [$poktan->gapoktan->id, $poktan->id]) }}" class="btn btn-primary">Tambah Anggota</a>
-                        <a href="{{ route('ketua.poktan.index', ['gapoktan_id' => $gapoktan_id, 'poktan_id' => $poktan_id]) }}" class="btn btn-primary">Kembali</a>
+                        <a href="{{ route('ketua.gapoktan.show', ['gapoktan' => $gapoktan, 'poktan' => $poktan]) }}" class="btn btn-primary">Kembali</a>
                     </div>
 
                 </div>

@@ -51,7 +51,15 @@
                                 <tr>
                                     <td>{{ $poktan->nama }}</td>
                                     <td>
-                                        <a href="{{ route('ketua.poktan.show', ['gapoktan_id' => $gapoktan->id, 'poktan' => $poktan->id])                                        }}" class="btn btn-primary">Detail</a>
+                                        <a href="{{ route('ketua.poktan.show', ['gapoktan' => $gapoktan->id, 'poktan' => $poktan->id])}}" class="btn btn-info btn-sm">Detail</a>
+                                        <a href="{{ route('ketua.poktan.edit', ['gapoktan' => $gapoktan->id, 'poktan' => $poktan->id]) }}" class="btn btn-primary btn-sm">Edit</a>
+                                    <form action="{{ route('ketua.poktan.destroy', ['gapoktan' => $gapoktan->id, 'poktan' => $poktan->id]) }}" method="post"
+                                        style="display:inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data?')">Hapus</button>
+                                    </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -61,7 +69,7 @@
                     <hr>
 
                     <div class="text-right">
-                        <a href="{{ route('admin.ketua.gapoktan.show.create', ['gapoktan_id' => $gapoktan->id]) }}" class="btn btn-primary">Tambah Poktan</a>
+                        <a href="{{ route('ketua.poktan.create', ['gapoktan' => $gapoktan->id]) }}" class="btn btn-primary">Tambah Poktan</a>
                     </div>
 
 

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class GapoktanController extends Controller
 {
-    public function index()
+    public function index(Gapoktan $gapoktan)
     {
         $gapoktan = Gapoktan::with('poktan')->get();
 
@@ -37,9 +37,9 @@ class GapoktanController extends Controller
         return redirect()->route('ketua.gapoktan.index')->with(['success' => 'Data berhasil diperbarui.']);
     }
 
-    public function show($gapoktan_id)
+    public function show($gapoktan)
     {
-    $gapoktan = Gapoktan::with('poktan')->findOrFail($gapoktan_id);
+    $gapoktan = Gapoktan::with('poktan')->findOrFail($gapoktan);
 
     return view('ketua.gapoktan.show', compact('gapoktan'));
     }
@@ -53,7 +53,7 @@ class GapoktanController extends Controller
 
     $poktan = new Poktan;
     $poktan->nama = $request->nama;
-    $poktan->gapoktan_id = $gapoktan->id;
+    $poktan->gapoktan = $gapoktan->id;
     $poktan->save();
 
     return redirect()->route('ketua.gapoktan.show', ['gapoktan' => $gapoktan])->with(['success' => 'Poktan berhasil ditambahkan.']);
