@@ -42,7 +42,7 @@
                         <tbody>
                             @foreach ($poktan->anggota_poktan as $anggota)
                                 <tr>
-                                    <td>{{ $anggota->nama_lengkap }}</td>
+                                    <td>{{ $anggota->nama_anggota }}</td>
                                     <td>{{ $anggota->jenis_kelamin }}</td>
                                     <td>{{ $anggota->kontak }}</td>
                                 </tr>
