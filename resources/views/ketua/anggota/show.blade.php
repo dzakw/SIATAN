@@ -7,12 +7,21 @@
     <div class="py-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
-                <li class="breadcrumb-item"><a href="#"><span class="fas fa-home"></span></a></li>
+                <li class="breadcrumb-item"><a href="{{ route('dashboard.admin')}}"><span class="fas fa-home"></span></a></li>
                 <li class="breadcrumb-item"><a href="#">Gapoktan</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('ketua.gapoktan.show', $poktan->gapoktan->id) }}">{{ $poktan->gapoktan->nama }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('ketua.poktan.show', [$poktan->gapoktan->id, $poktan->id]) }}">{{ $poktan->nama }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('ketua.anggota.index', [$poktan->gapoktan->id, $poktan->id]) }}">Anggota Poktan</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ $anggota_poktan->nama_lengkap }}</li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{ route('ketua.anggota.show', [$poktan->gapoktan->id, $anggota_poktan->poktan->id, $anggota_poktan->id]) }}">
+                        @if(str_contains($anggota_poktan->nama_anggota, 'Bapak') ||
+                            str_contains($anggota_poktan->nama_anggota, 'Ibu'))
+                            {{ $anggota_poktan->nama_anggota }}
+                        @else
+                            {{ $anggota_poktan->jenis_kelamin == 'laki-laki' ? 'Bapak ' : 'Ibu ' }}
+                            {{ $anggota_poktan->nama_anggota }}
+                        @endif
+                    </a>
+                </li>
             </ol>
         </nav>
     </div>
@@ -26,7 +35,7 @@
 
                     <div class="mb-3">
                         <label for="nama_lengkap">Nama Lengkap:</label>
-                        <input type="text" value="{{ $anggota_poktan->nama_lengkap }}" disabled>
+                        <input type="text" value="{{ $anggota_poktan->nama_anggota }}" disabled>
                     </div>
 
                     <div class="mb-3">
@@ -40,17 +49,9 @@
                     </div>
 
                     <hr>
-
                     <div class="text-right">
-                        <a href="{{ route('ketua.anggota.edit', [$poktan->gapoktan, $poktan, $anggota_poktan]) }}" class="btn btn-primary">Edit</a>
-
-                        <form action="{{ route('ketua.anggota.destroy', [$poktan->gapoktan, $poktan, $anggota_poktan]) }}" class="d-inline" method="POST" onsubmit="return confirm('Are you sure to delete this data?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-
-                        <a href="{{ route('ketua.anggota.index', [$poktan->gapoktan->id, $poktan->id]) }}" class="btn btn-primary">Kembali</a>
+                        <a href="{{ route('ketua.pinjaman.create', [$poktan->gapoktan->id, $poktan->id, $anggota_poktan->id]) }}" class="btn btn-primary">Tambah Pinjaman</a>
+                        <a href="{{ route('ketua.poktan.show', [$poktan->gapoktan->id, $poktan->id]) }}" class="btn btn-primary">Kembali</a>
                     </div>
 
                 </div>

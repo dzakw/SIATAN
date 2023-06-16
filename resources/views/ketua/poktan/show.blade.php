@@ -7,11 +7,12 @@
     <div class="py-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
-                <li class="breadcrumb-item"><a href="#"><span class="fas fa-home"></span></a></li>
+                <li class="breadcrumb-item"><a href="{{ route('dashboard.admin')}}"><span class="fas fa-home"></span></a></li>
                 <li class="breadcrumb-item"><a href="#">Gapoktan</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('ketua.gapoktan.show', $poktan->gapoktan->id) }}">{{ $poktan->gapoktan->nama }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('ketua.poktan.show', [$poktan->gapoktan->id, $poktan->id]) }}">{{ $poktan->nama }}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Detail Poktan</li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{ route('ketua.poktan.show', [$poktan->gapoktan->id, $poktan->id]) }}">{{ str_contains($poktan->nama, 'Poktan') ? '' : 'Poktan ' }}{{ $poktan->nama }}</a>
+                </li>
             </ol>
         </nav>
     </div>
@@ -30,7 +31,7 @@
 
                     <hr>
 
-                    <h5 class="card-title">List Anggota Poktan</h5>
+                    <h5 class="card-title">Daftar Anggota Poktan</h5>
                     <table class="table table-bordered" id="anggotaTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
@@ -45,6 +46,15 @@
                                     <td>{{ $anggota->nama_anggota }}</td>
                                     <td>{{ $anggota->jenis_kelamin }}</td>
                                     <td>{{ $anggota->kontak }}</td>
+                                    <td>
+                                        <a href="{{ route('ketua.anggota.show', ['gapoktan' => $poktan->gapoktan->id, 'poktan' => $poktan->id, 'anggota' => $anggota->id]) }}" class="btn btn-info btn-sm">Detail</a>
+                                        <a href="{{ route('ketua.anggota.edit', ['gapoktan' => $poktan->gapoktan->id, 'poktan' => $poktan->id, 'anggota' => $anggota->id]) }}" class="btn btn-primary btn-sm">Edit</a>
+                                        <form action="{{ route('ketua.anggota.destroy', ['gapoktan' => $poktan->gapoktan->id, 'poktan' => $poktan->id, 'anggota' => $anggota->id]) }}" method="post" style="display:inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data?')">Hapus</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

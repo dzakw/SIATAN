@@ -65,6 +65,16 @@ use Illuminate\Support\Facades\{Route, Auth};
             Route::post('store', 'AnggotaPoktanController@store')->name('ketua.anggota.store');
             Route::put('{anggota}', 'AnggotaPoktanController@update')->name('ketua.anggota.update');
             Route::delete('delete/{anggota}', 'AnggotaPoktanController@destroy')->name('ketua.anggota.destroy');
-    });
+        });
 
+        Route::prefix('admin/ketua/gapoktan/show/{gapoktan}/poktan/show/{poktan}/anggota/show/{anggota}/pinjaman')
+        ->middleware('auth')
+        ->group(function(){
+            Route::get('show/{pinjaman}', 'PinjamanController@show')->name('ketua.pinjaman.show');
+            Route::get('create', 'PinjamanController@create')->name('ketua.pinjaman.create');
+            Route::get('edit/{pinjaman}', 'PinjamanController@edit')->name('ketua.pinjaman.edit');
+            Route::post('store', 'PinjamanController@store')->name('ketua.pinjaman.store');
+            Route::put('{pinjaman}', 'PinjamanController@update')->name('ketua.pinjaman.update');
+            Route::delete('delete/{pinjaman}', 'PinjamanController@destroy')->name('ketua.pinjaman.destroy');
+        });
 

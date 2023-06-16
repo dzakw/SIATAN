@@ -11,7 +11,7 @@
     <div class="py-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
-                <li class="breadcrumb-item"><a href="#"><span class="fas fa-home"></span></a></li>
+                <li class="breadcrumb-item"><a href="{{ route('dashboard.admin')}}"><span class="fas fa-home"></span></a></li>
                 <li class="breadcrumb-item"><a href="#">Gapoktan</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('ketua.gapoktan.show', $gapoktan->id) }}">{{ $gapoktan->nama }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Data Poktan</li>

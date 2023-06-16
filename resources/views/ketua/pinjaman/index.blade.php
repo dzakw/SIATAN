@@ -26,7 +26,7 @@
             <div class="d-block mb-4 mb-md-0">
                 <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
                     <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
-                        <li class="breadcrumb-item"><a href="#"><span class="fas fa-home"></span></a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard.admin')}}"><span class="fas fa-home"></span></a></li>
                         <li class="breadcrumb-item"><a href="#">Pinjaman</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Data Pinjaman</li>
                     </ol>

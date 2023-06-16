@@ -7,10 +7,11 @@
     <div class="py-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
-                <li class="breadcrumb-item"><a href="#"><span class="fas fa-home"></span></a></li>
-                <li class="breadcrumb-item"><a href="#">Gapoktan</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('dashboard.admin')}}"><span class="fas fa-home"></span></a></li>
                 <li class="breadcrumb-item"><a href="{{ route('ketua.gapoktan.index') }}">Daftar Gapoktan</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Edit Gapoktan</li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{ route('ketua.gapoktan.show', $gapoktan->id) }}">Edit Gapoktan: {{ str_contains($gapoktan->nama, 'Gapoktan') ? '' : 'Gapoktan '}}{{ $gapoktan->nama }}</a>
+                </li>
             </ol>
         </nav>
     </div>

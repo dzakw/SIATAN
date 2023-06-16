@@ -49,16 +49,24 @@ class AnggotaPoktanController extends Controller
 
     public function show($gapoktan_id, $poktan_id, $anggota_id)
     {
+        $poktan = Poktan::findOrFail($poktan_id);
+        $gapoktan = $poktan->gapoktan;
+        $nama_anggota = '';
         $anggota_poktan = AnggotaPoktan::findOrFail($anggota_id);
 
-        return view('ketua.anggota.show', compact('anggota_poktan'));
+        return view('ketua.anggota.show', compact('poktan','gapoktan', 'anggota_poktan'));
     }
+
 
     public function edit($gapoktan_id, $poktan_id, $anggota_id)
     {
+        $poktan = Poktan::findOrFail($poktan_id);
+        $gapoktan = $poktan->gapoktan;
+        $nama_anggota = '';
+
         $anggota_poktan = AnggotaPoktan::findOrFail($anggota_id);
 
-        return view('ketua.anggota.edit', compact('anggota_poktan'));
+        return view('ketua.anggota.edit', compact('anggota_poktan', 'poktan', 'gapoktan', 'nama_anggota'));
     }
 
     public function update(Request $request, $gapoktan_id, $poktan_id, $anggota_id)
