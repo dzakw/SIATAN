@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\{Route, Auth};
     Route::prefix('admin')
         ->middleware('auth')
         ->group(function () {
-            Route::get('/', 'Admin\DashboardController@index')->name('dashboard.admin');
+            Route::redirect('/','admin/ketua/gapoktan/index')->name('dashboard.admin');
             Route::resource('anggota_poktan', 'Admin\AnggotaPoktanController');
             Route::get('profile', 'Admin\DashboardController@profile')->name('admin.profile');
             Route::put('update-profile/{user}', 'Admin\DashboardController@update_profile')->name('admin.update-profile');
@@ -19,17 +19,7 @@ use Illuminate\Support\Facades\{Route, Auth};
             Route::get('bayar-pinjaman/{id}/{bayarpinjamid}', 'PinjamanController@bayar_pinjaman_detail')->name('pinjaman.bayar.detail');
             Route::put('bayar-pinjaman/{id}/{bayarpinjamid}', 'PinjamanController@bayar_pinjaman_post')->name('pinjaman.bayar.post');
             Route::resource('anggota_poktan', 'Admin\AnggotaPoktanController');
-        });
-
-    Route::prefix('ketua')
-        ->middleware('auth')
-        ->group(function () {
-            Route::get('/', 'Ketua\DashboardController@index')->name('dashboard.ketua');
-            Route::resource('user', 'Ketua\UserController');
-            Route::resource('pengaturan', 'Ketua\PengaturanController');
-            Route::get('pinjaman_pdf', 'Ketua\PinjamanController@cetak_pdf')->name('pinjaman.pdf');
-            Route::get('pinjaman_excel', 'Ketua\PinjamanController@cetak_excel')->name('pinjaman.excel');
-            Route::resource('pinjaman-ketua', 'Ketua\PinjamanController')->except(['create', 'store', 'edit']);
+            Route::get('pinjaman_pdf', 'PinjamanController@cetak_pdf')->name('pinjaman.pdf');
         });
 
         Route::prefix('admin/ketua/gapoktan')
@@ -76,5 +66,6 @@ use Illuminate\Support\Facades\{Route, Auth};
             Route::post('store', 'PinjamanController@store')->name('ketua.pinjaman.store');
             Route::put('{pinjaman}', 'PinjamanController@update')->name('ketua.pinjaman.update');
             Route::delete('delete/{pinjaman}', 'PinjamanController@destroy')->name('ketua.pinjaman.destroy');
+            Route::post('pinjaman/bayar', 'PinjamanController@bayar')->name('ketua.pinjaman.bayar');
         });
 

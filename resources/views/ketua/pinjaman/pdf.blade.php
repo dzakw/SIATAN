@@ -16,7 +16,7 @@
 
     </style>
     <center>
-        <h5>Laporan Pinjaman Format PDF</h4>
+        <h5>Laporan Pinjaman</h4>
         </h5>
     </center>
 
@@ -27,7 +27,6 @@
                 <th>Tanggal</th>
                 <th>Nama Anggota</th>
                 <th>Jumlah Pinjaman</th>
-                <th>Jangka Waktu</th>
                 <th>Biaya Jasa</th>
                 <th>Status</th>
             </tr>
@@ -37,7 +36,11 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $item->created_at->format('d F Y') }}</td>
-                <td>{{ $item->anggota->nama_anggota }}</td>
+                <td>
+                    @if ($item->anggota_poktan)
+                        {{ $item->anggota_poktan->nama_anggota }}
+                    @endif
+                </td>
                 <td>@currency($item->jumlah_pinjaman)</td>
                 <td>{{ $item->biaya_jasa }}</td>
                 <td>{{ $item->status }}</td>

@@ -47,10 +47,52 @@
                         <label for="kontak">Kontak:</label>
                         <input type="text" value="{{ $anggota_poktan->kontak }}" disabled>
                     </div>
+                    <hr>
+
+                    <h5 class="card-title">Pinjaman</h5>
+                    <table class="table table-bordered" id="pinjamanTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal Pinjam</th>
+                                <th>Jumlah Pinjaman</th>
+                                <th>Biaya Jasa</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                                @foreach ($anggota_poktan->pinjaman as $pinjaman)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $pinjaman->tanggal_pinjaman }}</td>
+                                        <td>{{ $pinjaman->jumlah_pinjaman }}</td>
+                                        <td>{{ $pinjaman->biaya_jasa }}</td>
+                                        <td>
+                                        @if($pinjaman->status == 'belum_lunas')
+                                            <span class="btn btn-danger btn-sm" style="color: white;">Belum Lunas</span>
+                                        @else
+                                            <span class="btn btn-info btn-sm" style="color: white;">Lunas</span>
+                                        @endif
+                                        </td>
+                                        <td>
+                                         </form>
+                                            <form action="{{ route('ketua.pinjaman.bayar', [$poktan->gapoktan->id, $poktan->id, $anggota_poktan->id]) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success">Bayar</button>
+                                            </form>
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                        </tbody>
+                    </table>
 
                     <hr>
+
                     <div class="text-right">
-                        <a href="{{ route('ketua.pinjaman.create', [$poktan->gapoktan->id, $poktan->id, $anggota_poktan->id]) }}" class="btn btn-primary">Tambah Pinjaman</a>
+                        <a href="{{ route('ketua.pinjaman.create', ['gapoktan' => $poktan->gapoktan->id, 'poktan' => $poktan->id, 'anggota' => $anggota_poktan->id]) }}" class="btn btn-primary">Tambah Pinjaman</a>
                         <a href="{{ route('ketua.poktan.show', [$poktan->gapoktan->id, $poktan->id]) }}" class="btn btn-primary">Kembali</a>
                     </div>
 
@@ -59,4 +101,12 @@
         </div>
     </div>
 
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready( function () {
+            $('#pinjamanTable').DataTable();
+        } );
+    </script>
 @endsection

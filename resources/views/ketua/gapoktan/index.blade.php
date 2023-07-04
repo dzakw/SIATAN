@@ -48,7 +48,7 @@
                                         <td>{{ $g->kontak }}</td>
                                         <td>
                                             <a href="{{ route('ketua.gapoktan.show', $g->id) }}"
-                                                class="btn btn-info btn-sm">Detail</a>
+                                                class="btn btn-info btn-sm">Daftar Poktan</a>
                                             <a href="{{ route('ketua.gapoktan.edit', $g->id) }}"
                                                 class="btn btn-primary btn-sm">Edit</a>
                                             <form action="{{ route('ketua.gapoktan.destroy', $g->id) }}" method="post"

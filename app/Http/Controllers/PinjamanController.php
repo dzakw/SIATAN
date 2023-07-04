@@ -2,247 +2,125 @@
 
 namespace App\Http\Controllers;
 
-use App\Pinjaman;
+use App\Http\Controllers\Controller;
 use App\AnggotaPoktan;
-use App\Pengaturan;
-use App\Pembayaran;
+use App\Pinjaman;
+use App\Gapoktan;
+use App\Poktan;
 use App\Invoice;
-use \Carbon\Carbon;
 use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\DB;
+use PDF;
 
 class PinjamanController extends Controller
 {
+
     public function index()
     {
-        if (request()->ajax()) {
-            $query = Pinjaman::query()->with(['anggota_poktan']);
+        $pinjaman = Pinjaman::leftJoin('anggota_poktan', 'pinjaman.anggota_poktan_id', '=', 'anggota_poktan.id')
+            ->select('pinjaman.*', 'anggota_poktan.nama_anggota')
+            ->get();
 
-            return DataTables::of($query)
-                ->addColumn('action', function ($item) {
-                    if ($item->status == 'pending') {
-                        return
-                            '    <div class="btn-group">
-                <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="icon icon-sm">
-                        <span class="fas fa-ellipsis-h icon-dark"></span>
-                    </span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="action' .  $item->id . '">
-                    <a class="dropdown-item" href="' . route('pinjaman.edit', $item->id) . '"><span class="fas fa-eye mr-2"></span>Details</a>
-                    <form action="' . route('pinjaman.destroy', $item->id) . '" method="POST">
-                                        ' . method_field('delete') . csrf_field() . '
-                                        <button type="submit" class="dropdown-item text-danger">
-                                        <span class="fas fa-trash-alt mr-2"></span>Hapus</a>
-                                        </button>
-                                    </form>
-                </div>
-            </div>';
-                    } elseif ($item->status == 'lunas' || $item->status == 'belum_lunas') {
-                        return
-                            '<div class="btn-group">
-                <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="icon icon-sm">
-                        <span class="fas fa-ellipsis-h icon-dark"></span>
-                    </span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="action' .  $item->id . '">
-                    <a class="dropdown-item" href="' . route('pinjaman.edit', $item->id) . '"><span class="fas fa-eye mr-2"></span>Details</a>
-                </div>
-            </div>';
-                    }
-                })
-                ->editColumn('created_at', function ($item) {
-                    return $item->created_at->format('d F Y');
-                })
-                ->addColumn('anggota_poktan', function ($item) {
-                    return $item->anggota_poktan->nama_anggota;
-                })
-                ->editColumn('jumlah_pinjaman', function ($item) {
-                    return "Rp." . number_format($item->jumlah_pinjaman, 0, ',', '.');
-                })
-                ->editColumn('status', function ($item) {
-                    if ($item->status == 'lunas') {
-                        return "<span class='text-success font-weight-bold'>" . $item->status .  "</span>";
-                    } elseif ($item->status == 'pending') {
-                        return "<span class='text-primary font-weight-bold'>" . $item->status .  "</span>";
-                    } else {
-                        return "<span class='text-danger font-weight-bold'>" . $item->status .  "</span>";
-                    }
-                })
-                ->rawColumns(['action', 'status'])
-                ->make();
-        }
-
-        $pinjaman = Pinjaman::with('invoice')->get();
-
-        return view('member.pinjaman.pinjaman_index', compact('pinjaman'));
+        return view('ketua.pinjaman.index', compact('pinjaman'));
     }
 
-
-    public function create()
+    public function create($poktan, $anggota)
     {
-        $data_anggota = AnggotaPoktan::all();
-        $data_pengaturan = Pengaturan::all()->take(1)->first();
-        return view('member.pinjaman.pinjaman_create', compact('data_anggota', 'data_pengaturan'));
+        $poktan = Poktan::findOrFail($poktan);
+        $gapoktan = $poktan->gapoktan;
+        $anggota_poktan = AnggotaPoktan::where('poktan_id', $poktan->id)
+            ->where('id', $anggota)
+            ->firstOrFail();
+
+        return view('ketua.pinjaman.create', compact('gapoktan', 'poktan', 'anggota_poktan'));
     }
 
 
-    public function store(Request $request)
-{
-    $request->validate([
-        'anggota_poktan_id' => 'required|exists:anggota,id',
-        'tenggat_tagihan' => 'required|integer|between:1,12',
-        'jumlah_pinjaman' => 'required|numeric',
-    ]);
-
-    $cek_biaya_jasa = Pengaturan::first();
-    $jumlah_pinjaman = $request->jumlah_pinjaman;
-    $waktu = $request->tenggat_tagihan;
-    $biaya_jasa = $cek_biaya_jasa->jasa_pinjam;
-    $jumlah_bayar = $jumlah_pinjaman + $biaya_jasa;
-
-    $cek_pinjaman_user = Pinjaman::where('anggota_poktan_id', $request->anggota_poktan_id)
-        ->where(function ($q) {
-            $q->where('status', 'pending')
-                ->orWhere('status', 'belum_lunas');
-        })
-        ->exists();
-
-
-
-    if ($cek_pinjaman_user) {
-        return redirect()->route('pinjaman.create')->with(['error' => 'Anggota masih memiliki tanggungan pinjaman.']);
-    } else {
-        $pinjaman = Pinjaman::create([
-            'anggota_poktan_id' =>  $request->anggota_poktan_id,
-            'jumlah_pinjaman' => $jumlah_pinjaman,
-            'biaya_jasa' => $biaya_jasa,
-            'tanggal_pinjaman' => 'pending',
+    public function store(Request $request, $gapoktan, $poktan, $anggota)
+    {
+        $request->validate([
+            'jumlah_pinjaman' => 'required|string|max:100',
+            'biaya_jasa' => 'required',
+            'tanggal_pinjaman' => 'required|date_format:Y-m-d',
+            'status' => 'required|in:pending,belum_lunas,lunas'
         ]);
 
-        for ($bulan = 1; $bulan <= $waktu; $bulan++) {
-            $date = Carbon::now('Asia/Jakarta');
-            $date->modify('+' . $bulan . ' month');
-            $pembayaran = Pembayaran::create([
-                'pinjaman_id' => $pinjaman->id,
-                'jumlah_bayar' => $jumlah_bayar,
-                'tanggal_bayar' => null,
-            ]);
-        }
+        $anggota_poktan = AnggotaPoktan::where('poktan_id', $poktan)
+            ->where('id', $anggota)
+            ->firstOrFail();
 
-        return redirect()->route('pinjaman.create')->with(['success' => 'Pinjaman berhasil ditambahkan.']);
+        $pinjaman = new Pinjaman;
+        $pinjaman->anggota_poktan_id = $anggota_poktan->id;
+        $pinjaman->jumlah_pinjaman = $request->jumlah_pinjaman;
+        $pinjaman->biaya_jasa = $request->biaya_jasa;
+        $pinjaman->tanggal_pinjaman = $request->tanggal_pinjaman;
+        $pinjaman->status = $request->status;
+
+        $pinjaman->save();
+
+        return redirect()->route('ketua.anggota.show', ['gapoktan' => $gapoktan, 'poktan' => $poktan, 'anggota' => $anggota])->with(['status' => 'Data Pinjaman Berhasil Ditambahkan']);
+    }
+
+
+
+    public function show($anggota_id, $pinjaman_id)
+    {
+        $anggota = AnggotaPoktan::findOrFail($anggota_id);
+        $pinjaman = Pinjaman::findOrFail($pinjaman_id);
+
+        return view('ketua.pinjaman.show', compact('anggota','pinjaman'));
+    }
+
+
+    public function edit($anggota_id, $pinjaman_id)
+    {
+        $anggota = AnggotaPoktan::findOrFail($anggota_id);
+        $pinjaman = Pinjaman::findOrFail($pinjaman_id);
+
+        return view('ketua.pinjaman.edit', compact('anggota', 'pinjaman'));
+    }
+
+    public function update(Request $request, $anggota_id, $pinjaman_id)
+    {
+        $request->validate([
+            'jumlah_pinjaman' => 'required|string|max:100',
+            'biaya_jasa' => 'required',
+            'tanggal_pinjaman' => 'required|date_format:Y-m-d',
+            'status' => 'required|in:pending,belum_lunas,lunas'
+        ]);
+
+        $pinjaman = Pinjaman::findOrFail($pinjaman_id);
+        $data = $request->all();
+
+        $pinjaman->update($data);
+
+        return redirect()->route('ketua.anggota.show', ['gapoktan' => $anggota_id->poktan->gapoktan->id, 'poktan' => $anggota->poktan->id, 'anggota' => $anggota->id])->with(['status' => 'Data Pinjaman Berhasil Diubah']);
+    }
+
+    public function destroy($anggota_id, $pinjaman_id)
+    {
+        $pinjaman = Pinjaman::findOrFail($pinjaman_id);
+        $pinjaman->delete();
+
+        return redirect()->route('ketua.anggota.show', ['gapoktan' => $anggota_id->poktan->gapoktan->id, 'poktan' => $anggota->poktan->id, 'anggota' => $anggota->id])->with(['status' => 'Data Pinjaman Berhasil Dihapus']);
+    }
+
+    public function bayar($gapoktan_id, $poktan_id, $anggota_id)
+    {
+        $anggota_poktan = AnggotaPoktan::findOrFail($anggota_id);
+        $pinjaman = $anggota_poktan->pinjaman()->where('status', 'belum_lunas')->firstOrFail();
+
+        $pinjaman->status = 'lunas';
+        $pinjaman->save();
+
+        return redirect()->back()->with(['status' => 'Pembayaran Berhasil']);
+    }
+
+    public function cetak_pdf()
+    {
+        $pinjaman = Pinjaman::with('anggota_poktan')->get();
+
+        $pdf = PDF::loadView('ketua.pinjaman.pdf', compact('pinjaman'));
+        return $pdf->download('laporan-pinjaman.pdf');
     }
 }
 
-
-
-    public function show(Pinjaman $pinjaman)
-    {
-        //
-    }
-
-
-    public function edit(Pinjaman $pinjaman)
-    {
-        $data_anggota = Anggota::all();
-        $data_pengaturan = Pengaturan::first();
-        $data_pinjaman = Pinjaman::with(['anggota'])->find($pinjaman->id);
-
-        return view('member.pinjaman.pinjaman_edit', compact('data_anggota', 'data_pengaturan', 'data_pinjaman'));
-    }
-
-
-    public function update(Request $request, Pinjaman $pinjaman)
-    {
-        $request->validate([
-            'anggota_poktan_id' => 'required|exists:anggota,id',
-            'keterangan' => 'max:200',
-        ]);
-        Pinjaman::where('id', $pinjaman->id)->update([
-            'anggota_poktan_id' => $request->anggota_poktan_id,
-            'keterangan' => $request->keterangan,
-        ]);
-
-        return redirect()->route('pinjaman.index')->with(['success' => 'Pinjaman berhasil diupdate.']);
-    }
-
-
-    public function destroy(Pinjaman $pinjaman)
-    {
-        $pinjaman = Pinjaman::findOrFail($pinjaman->id);
-        $pinjaman->forceDelete();
-        return redirect()->route('pinjaman.index')->with(['success' => 'Data Pinjaman ID ' . $pinjaman->id . ' Berhasil Dihapus']);
-    }
-
-    public function pembayaran($id)
-    {
-        $data_pinjaman = Pinjaman::find($id);
-        $detail_pinjaman = DB::table('pembayaran')
-                   ->select('pembayaran.*', 'invoice.tenggat_pinjaman')
-                   ->join('pinjaman', 'pembayaran.pinjaman_id', '=', 'pinjaman.id')
-                   ->join('invoice', function ($join) use ($data_pinjaman) {
-                        $join->on('pinjaman.id', '=', 'invoice.pinjaman_id')
-                             ->where('invoice.tanggal_pinjam', '=', $data_pinjaman->tanggal_pinjaman);
-                   })
-                   ->where('pembayaran.pinjaman_id', $data_pinjaman->id)
-                   ->get();
-        $count_sudah_bayar = Pembayaran::where('pinjaman_id', $data_pinjaman->id)->whereNotNull('tanggal_bayar')->count();
-
-        $total_bayar = $data_pinjaman->bayar_perbulan * $count_sudah_bayar;
-
-        return view('member.pinjaman.pinjaman_bayar', compact('data_pinjaman', 'detail_pinjaman', 'total_bayar', 'count_sudah_bayar'));
-    }
-
-    public function pembayaran_detail($id, $pembayaran_id)
-    {
-        $data_pinjaman = Pinjaman::find($id);
-        $detail_pinjaman = DB::table('pembayaran')
-                   ->select('pembayaran.*', 'invoice.tenggat_pinjaman')
-                   ->join('pinjaman', 'pembayaran.pinjaman_id', '=', 'pinjaman.id')
-                   ->join('invoice', function ($join) use ($data_pinjaman) {
-                        $join->on('pinjaman.id', '=', 'invoice.pinjaman_id')
-                             ->where('invoice.tanggal_pinjam', '=', $data_pinjaman->tanggal_pinjaman);
-                   })
-                   ->where('pembayaran.pinjaman_id', $data_pinjaman->id)
-                   ->get();
-        $tempo = Carbon::parse($detail_pinjaman->tenggat_tagihan);
-        $today = Carbon::now('Asia/Jakarta');
-
-        if ($tempo < $today) {
-            $selisih = $tempo->diffInDays($today);
-            $telat_hari = $selisih;
-            $denda = 1000 * $selisih;
-        } else {
-            $telat_hari = 0;
-            $denda = 0;
-        }
-
-        return view('member.pinjaman.pinjaman_bayar_detail', compact('data_pinjaman', 'detail_pinjaman', 'telat_hari', 'denda'));
-    }
-
-    public function pembayaran_post(Request $request, $id, $pembayaran_id)
-    {
-        $request->validate([
-            'denda' => 'numeric',
-        ]);
-
-        Pembayaran::where('id', $pembayaran_id)->update([
-            'tanggal_bayar' => Carbon::now('Asia/Jakarta'),
-            'denda' => $request->denda,
-        ]);
-
-        $cek_data = Pembayaran::where('pinjaman_id', $id)->whereNull('tanggal_bayar')->count();
-
-        if ($cek_data == 0) {
-            Pinjaman::where('id', $id)->update([
-                'status' => 'lunas',
-            ]);
-        }
-
-        return redirect()->route('pinjaman.bayar', ['id' => $id])->with(['success' => 'Pembayaran berhasil.']);
-    }
-}

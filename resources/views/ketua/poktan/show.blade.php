@@ -23,7 +23,6 @@
                 <div class="card-body">
                     <h5 class="card-title">Detail Poktan</h5>
                     <hr>
-
                     <div class="mb-3">
                         <label for="nama">Nama Poktan:</label>
                         <input type="text" value="{{ $poktan->nama }}" disabled>
@@ -47,7 +46,7 @@
                                     <td>{{ $anggota->jenis_kelamin }}</td>
                                     <td>{{ $anggota->kontak }}</td>
                                     <td>
-                                        <a href="{{ route('ketua.anggota.show', ['gapoktan' => $poktan->gapoktan->id, 'poktan' => $poktan->id, 'anggota' => $anggota->id]) }}" class="btn btn-info btn-sm">Detail</a>
+                                        <a href="{{ route('ketua.anggota.show', ['gapoktan' => $poktan->gapoktan->id, 'poktan' => $poktan->id, 'anggota' => $anggota->id]) }}" class="btn btn-info btn-sm">Daftar Pinjaman</a>
                                         <a href="{{ route('ketua.anggota.edit', ['gapoktan' => $poktan->gapoktan->id, 'poktan' => $poktan->id, 'anggota' => $anggota->id]) }}" class="btn btn-primary btn-sm">Edit</a>
                                         <form action="{{ route('ketua.anggota.destroy', ['gapoktan' => $poktan->gapoktan->id, 'poktan' => $poktan->id, 'anggota' => $anggota->id]) }}" method="post" style="display:inline">
                                             @csrf
@@ -79,7 +78,6 @@
         $(document).ready(function() {
             $('#anggotaTable').DataTable();
         });
-
     </script>
 @endsection
 

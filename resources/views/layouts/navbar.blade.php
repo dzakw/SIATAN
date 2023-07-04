@@ -23,12 +23,6 @@
             </div>
         </div>
         <ul class="nav flex-column">
-            <li class="nav-item ">
-                <a href="{{ route('dashboard.admin') }}" class="nav-link">
-                    <span class="sidebar-icon"><span class="fas fa-chart-pie"></span></span>
-                    <span>Dashboard</span>
-                </a>
-            </li>
             <li class="nav-item">
                 <span class="nav-link  collapsed  d-flex justify-content-between align-items-center"
                     data-toggle="collapse" data-target="#gapoktan">
@@ -53,8 +47,8 @@
                 </div>
             </li>
             <li class="nav-item">
-                <span class="nav-link  collapsed  d-flex justify-content-between align-items-center"
-                    data-toggle="collapse" data-target="#pinjaman-app">
+                <span class="nav-link collapsed d-flex justify-content-between align-items-center"
+                      data-toggle="collapse" data-target="#pinjaman-app">
                     <span>
                         <span class="sidebar-icon"><span class="fas fa-table"></span></span>
                         Pinjaman
@@ -62,20 +56,21 @@
                     <span class="link-arrow"><span class="fas fa-chevron-right"></span></span>
                 </span>
                 <div class="multi-level collapse {{ (Request::route()->getName() == 'pinjaman.index') ||
-                                          (Request::route()->getName() == 'pinjaman.create') ||
+                                                      (Request::route()->getName() == 'pinjaman.create') ||
 
-                                          (Request::route()->getName() == 'pinjaman.show')  ? 'show' : '' }}"
-                    role="list" id="pinjaman-app" aria-expanded="false">
+                                                      (Request::route()->getName() == 'pinjaman.show') ? 'show' : '' }}"
+                     role="list" id="pinjaman-app" aria-expanded="false">
                     <ul class="flex-column nav">
                         <li class="nav-item {{ (Request::route()->getName() == 'pinjaman.index') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('pinjaman.index') }}"><span>Data Pinjaman</span></a>
                         </li>
-                        <li class="nav-item {{ (Request::route()->getName() == 'pinjaman.create') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('pinjaman.create') }}"><span>Tambah Pinjaman</span></a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('pinjaman.pdf')}}"><span>Print PDF</span></a>
                         </li>
                     </ul>
                 </div>
             </li>
+
         </ul>
     </div>
 </li>

@@ -53,7 +53,7 @@
                                 <tr>
                                     <td>{{ $poktan->nama }}</td>
                                     <td>
-                                        <a href="{{ route('ketua.poktan.show', ['gapoktan' => $gapoktan->id, 'poktan' => $poktan->id])}}" class="btn btn-info btn-sm">Detail</a>
+                                        <a href="{{ route('ketua.poktan.show', ['gapoktan' => $gapoktan->id, 'poktan' => $poktan->id])}}" class="btn btn-info btn-sm">Daftar Anggota Poktan</a>
                                         <a href="{{ route('ketua.poktan.edit', ['gapoktan' => $gapoktan->id, 'poktan' => $poktan->id]) }}" class="btn btn-primary btn-sm">Edit</a>
                                     <form action="{{ route('ketua.poktan.destroy', ['gapoktan' => $gapoktan->id, 'poktan' => $poktan->id]) }}" method="post"
                                         style="display:inline">
