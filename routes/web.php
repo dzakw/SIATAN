@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\{Route, Auth};
             Route::put('bayar-pinjaman/{id}/{bayarpinjamid}', 'PinjamanController@bayar_pinjaman_post')->name('pinjaman.bayar.post');
             Route::resource('anggota_poktan', 'Admin\AnggotaPoktanController');
             Route::get('pinjaman_pdf', 'PinjamanController@cetak_pdf')->name('pinjaman.pdf');
+            Route::get('pinjaman_excel', 'PinjamanController@cetak_excel')->name('pinjaman.excel');
+            Route::get('pinjaman_word', 'PinjamanController@cetak_word')->name('pinjaman.word');
         });
 
         Route::prefix('admin/ketua/gapoktan')

@@ -10,6 +10,11 @@ use App\Poktan;
 use App\Invoice;
 use Illuminate\Http\Request;
 use PDF;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PinjamanExport;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
+
 
 class PinjamanController extends Controller
 {
@@ -122,5 +127,49 @@ class PinjamanController extends Controller
         $pdf = PDF::loadView('ketua.pinjaman.pdf', compact('pinjaman'));
         return $pdf->download('laporan-pinjaman.pdf');
     }
+
+    public function cetak_excel()
+    {
+        $pinjaman = Pinjaman::with('anggota_poktan')->get();
+
+        return Excel::download(new PinjamanExport($pinjaman), 'laporan-pinjaman.xlsx');
+    }
+
+    public function cetak_word()
+    {
+        $pinjaman = Pinjaman::with('anggota_poktan')->get();
+
+        $phpWord = new PhpWord();
+        $section = $phpWord->addSection();
+
+        $table = $section->addTable();
+        $table->addRow();
+        $table->addCell(500)->addText('No');
+        $table->addCell(2000)->addText('Nama Anggota');
+        $table->addCell(2000)->addText('Poktan');
+        $table->addCell(2000)->addText('Gapoktan');
+        $table->addCell(2000)->addText('Tanggal Pinjam');
+        $table->addCell(2000)->addText('Jumlah Pinjaman');
+        $table->addCell(2000)->addText('Biaya Jasa');
+        $table->addCell(1000)->addText('Status');
+
+        foreach ($pinjaman as $item) {
+            $table->addRow();
+            $table->addCell(500)->addText($item->id);
+            $table->addCell(2000)->addText($item->anggota_poktan->nama_anggota);
+            $table->addCell(2000)->addText($item->anggota_poktan->poktan->nama);
+            $table->addCell(2000)->addText($item->anggota_poktan->poktan->gapoktan->nama);
+            $table->addCell(2000)->addText($item->tanggal_pinjaman);
+            $table->addCell(2000)->addText($item->jumlah_pinjaman);
+            $table->addCell(2000)->addText($item->biaya_jasa);
+            $table->addCell(1000)->addText($item->status);
+        }
+
+        $filename = 'laporan-pinjaman.docx';
+        $phpWord->save($filename);
+
+        return response()->download($filename)->deleteFileAfterSend(true);
+    }
+
 }
 

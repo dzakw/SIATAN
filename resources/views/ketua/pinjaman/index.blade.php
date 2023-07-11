@@ -12,6 +12,17 @@
 
     <div class="row">
         <div class="col-12 mb-4">
+            <div class="d-flex justify-content-end mb-3">
+                <a class="btn btn-primary mr-2" href="{{ route('pinjaman.pdf') }}" target="_blank">
+                    <i class="fas fa-print mr-2"></i> Print PDF
+                </a>
+                <a class="btn btn-primary mr-2" href="{{ route('pinjaman.excel') }}" target="_blank">
+                    <i class="fas fa-file-excel mr-2"></i> Print Excel
+                </a>
+                <a class="btn btn-primary" href="{{ route('pinjaman.word') }}" target="_blank">
+                    <i class="fas fa-file-word mr-2"></i> Print Word
+                </a>
+            </div>
             <div class="card border-light shadow-sm components-section">
                 <table class="table table-bordered" id="pinjamanTable" width="100%" cellspacing="0">
                     <thead>
@@ -67,4 +78,3 @@
         } );
     </script>
 @endsection
-
